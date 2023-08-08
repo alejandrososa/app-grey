@@ -1,0 +1,41 @@
+grumphp:
+    process_timeout: 120
+    tasks:
+        git_commit_message:
+            enforce_capitalized_subject: false
+            max_subject_width: 72
+            type_scope_conventions:
+                - types:
+                      - build
+                      - ci
+                      - chore
+                      - docs
+                      - feat
+                      - fix
+                      - perf
+                      - refactor
+                      - revert
+                      - style
+                      - test
+        phpstan:
+            level: 5
+#        phpcs:
+#            standard: PSR12
+        phpcsfixer:
+            allow_risky: true
+            config: '.php-cs-fixer.php'
+            using_cache: true
+            config_contains_finder: true
+            verbose: true
+#        phplint: ~
+        phpmd:
+            ruleset: [ 'phpmd.xml' ]
+            whitelist_patterns: [ '/^app\//' ]
+        phpunit:
+            always_execute: true
+        rector:
+            config: 'rector.php'
+            triggered_by: [ 'php' ]
+            clear_cache: false
+            ignore_patterns: [ ]
+            no_diffs: false
