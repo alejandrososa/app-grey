@@ -85,7 +85,29 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "stan": "grumphp run --tasks=phpstan",
+        "cs": "grumphp run --tasks=phpcs",
+        "cs-fixer": "grumphp run --tasks=phpcsfixer",
+        "phpmd": "grumphp run --tasks=phpmd",
+        "rector": "grumphp run --tasks=rector",
+        "unit": "grumphp run --tasks=phpunit",
+        "grum": "grumphp run",
+        "qa": [
+            "@grum"
+        ],
+        "clean": [
+            "rm .phpcs-cache",
+            "rm .php-cs-fixer.cache",
+            "rm .phpunit.result.cache"
         ]
+    },
+    "scripts-descriptions": {
+        "cs":       "Check coding style compliance to PSR12 with phpcs",
+        "cs-fixer": "Check coding style compliance to PSR12 plus extra rules with php-cs-fixer (no fix applied)",
+        "stan":     "Run static analysis with phpstan",
+        "qa":       "Run code quality checks: phpcs, php-cs-fixer and phpstan",
+        "clean":    "Delete dev tools cache (Windows only)"
     },
     "conflict": {
         "symfony/symfony": "*"
