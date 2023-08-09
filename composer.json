@@ -1,4 +1,6 @@
 {
+    "name": "app/grey",
+    "description": "App with ports and adapters",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
@@ -95,6 +97,8 @@
         }
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest"
+        ,
         "enlightn/security-checker": "^1.10",
         "friendsofphp/php-cs-fixer": "^3.22",
         "phpmd/phpmd": "^2.13",

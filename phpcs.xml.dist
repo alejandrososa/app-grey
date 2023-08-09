@@ -7,6 +7,11 @@
     <arg name="cache" value=".phpcs-cache"/>
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
+    <arg name="encoding" value="utf-8"/>
+    <arg name="tab-width" value="4"/>
+    <arg name="report" value="full"/>
+    <arg name="report-width" value="120"/>
+    <arg name="colors"/>
 
     <rule ref="PSR12"/>
 
@@ -15,5 +20,12 @@
     <file>public/</file>
     <file>src/</file>
     <file>tests/</file>
+
+    <exclude-pattern>*/.git/*</exclude-pattern>
+    <exclude-pattern>*/.temp/*</exclude-pattern>
+    <exclude-pattern>*/.tools/*</exclude-pattern>
+    <exclude-pattern>*/.vscode/*</exclude-pattern>
+    <exclude-pattern>*/.idea/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
 
 </ruleset>
