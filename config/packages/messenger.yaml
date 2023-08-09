@@ -4,6 +4,7 @@ framework:
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
+            sync: 'sync://'
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
@@ -13,7 +14,6 @@ framework:
                     max_retries: 3
                     multiplier: 2
             failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
 
         routing:
             Symfony\Component\Mailer\Messenger\SendEmailMessage: async
@@ -22,3 +22,21 @@ framework:
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
+            OOD\Core\Shared\Domain\Bus\Command\Command: sync
+            OOD\Core\Shared\Domain\Bus\Query\Query: sync
+#            OOD\Core\Shared\Domain\Bus\Event\Event: broadcast
+            OOD\Core\Shared\Domain\Bus\Event\EventReceived: sync
+
+        default_bus: command.bus
+        buses:
+            command.bus:
+                middleware:
+                    - validation
+            query.bus:
+                middleware:
+                    - validation
+            event.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - validation
+                    - App\Core\Component\Infrastructure\Messenger\Middleware\HandleMessageDomainEventMiddleware
