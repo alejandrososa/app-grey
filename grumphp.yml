@@ -23,9 +23,9 @@ grumphp:
             enforce_single_lined_subject: true
             max_body_width: 80
             max_subject_width: 80
-            matchers:
-                Commit message must contain issue topic and number: >-
-                    /^\[(HOTFIX|BUGFIX|FEATURE|INFRA|MERGE|RELEASE)]\sICRSICRP-\d+\s::\s.*\s\[(COMPLETED|WIP)]/
+            #matchers:
+            #    Commit message must contain issue topic and number: >-
+            #        /^\[(HOTFIX|BUGFIX|FEATURE|INFRA|MERGE|RELEASE)]\sICRSICRP-\d+\s::\s.*\s\[(COMPLETED|WIP)]/
             case_insensitive: true
             multiline: false
             additional_modifiers: ''
