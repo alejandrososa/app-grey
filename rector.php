@@ -26,6 +26,7 @@ return static function (RectorConfig $rectorConfig): void {
     // basic rules
     $rectorConfig->importNames();
     $rectorConfig->importShortClasses();
+    $rectorConfig->removeUnusedImports();
 
     $parameters->set(Option::PHP_VERSION_FEATURES, PhpVersion::PHP_82);
 
@@ -40,6 +41,8 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->sets([
         SetList::PHP_82,
         SetList::CODE_QUALITY,
+        SetList::NAMING,
+        SetList::TYPE_DECLARATION,
         SetList::DEAD_CODE,
     ]);
 
