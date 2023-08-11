@@ -19,7 +19,6 @@
     <file>config/</file>
     <file>public/</file>
     <file>src/</file>
-    <file>tests/</file>
 
     <exclude-pattern>*/.git/*</exclude-pattern>
     <exclude-pattern>*/.temp/*</exclude-pattern>
@@ -27,5 +26,6 @@
     <exclude-pattern>*/.vscode/*</exclude-pattern>
     <exclude-pattern>*/.idea/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
 
 </ruleset>

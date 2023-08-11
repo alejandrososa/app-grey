@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Core\Shared\Domain\Criteria;
 
-use function Lambdish\Phunctional\reduce;
 use App\Core\Shared\Domain\Collection;
+
+use function Lambdish\Phunctional\reduce;
 
 final class Filters extends Collection
 {
+    /**
+     * @param array<Filter> $values
+     */
     public static function fromValues(array $values): self
     {
         return new self(array_map(self::filterBuilder(), $values));
@@ -19,6 +23,9 @@ final class Filters extends Collection
         return new self(array_merge($this->items(), [$filter]));
     }
 
+    /**
+     * @return array<Filter>
+     */
     public function filters(): array
     {
         return $this->items();
@@ -27,7 +34,7 @@ final class Filters extends Collection
     public function serialize(): string
     {
         return reduce(
-            static fn (string $accumulate, Filter $filter): string => sprintf('%s^%s', $accumulate, $filter->serialize()),
+            fn (string $accumulate, Filter $filter): string => sprintf('%s^%s', $accumulate, $filter->serialize()),
             $this->items(),
             ''
         );

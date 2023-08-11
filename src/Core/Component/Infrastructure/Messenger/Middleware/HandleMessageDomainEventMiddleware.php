@@ -4,26 +4,22 @@ declare(strict_types=1);
 
 namespace App\Core\Component\Infrastructure\Messenger\Middleware;
 
-use App\Core\Component\Infrastructure\Bus\BusFactoryInterface;
-use App\Core\Component\Infrastructure\Bus\Event\DomainEventSubscriberLocator;
-use App\Core\Shared\Domain\Bus\Event\Event;
+use Psr\Log\NullLogger;
+use Psr\Log\LoggerAwareTrait;
+use Symfony\Component\Messenger\Envelope;
 use App\Core\Shared\Domain\Bus\Event\EventReceived;
-use Closure;
-use Doctrine\ORM\Query;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Symfony\Component\Messenger\Stamp\StampInterface;
+use App\Core\Shared\Domain\Bus\Event\MessageDomainEvent;
+use Symfony\Component\Messenger\Handler\HandlerDescriptor;
+use Symfony\Component\Messenger\Middleware\StackInterface;
+use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\Handler\HandlersLocatorInterface;
+use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
+use App\Core\Component\Infrastructure\Bus\Event\DomainEventSubscriberLocator;
 
 use function Lambdish\Phunctional\map;
-
-use Psr\Log\LoggerAwareTrait;
-use Psr\Log\NullLogger;
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
-use Symfony\Component\Messenger\Handler\HandlerDescriptor;
-use Symfony\Component\Messenger\Handler\HandlersLocatorInterface;
-use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
-use Symfony\Component\Messenger\Middleware\StackInterface;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
-use Throwable;
 
 class HandleMessageDomainEventMiddleware implements MiddlewareInterface
 {
@@ -33,7 +29,6 @@ class HandleMessageDomainEventMiddleware implements MiddlewareInterface
 
     private HandlersLocatorInterface $handlersLocator;
     private bool $allowNoHandlers;
-    private BusFactoryInterface $busFactory;
     private DomainEventSubscriberLocator $domainEventSubscriberLocator;
 
     public function __construct(
@@ -55,7 +50,7 @@ class HandleMessageDomainEventMiddleware implements MiddlewareInterface
         $message = $envelope->getMessage();
 
         // message type event received
-        if ($message instanceof EventReceived) {
+        if ($message instanceof MessageDomainEvent) {
             $handlers = $this->domainEventSubscriberLocator->allSubscribedTo($message->eventName());
             $handlerDescriptors = map($this->classDescriptorExtractor(), $handlers);
 
@@ -69,27 +64,32 @@ class HandleMessageDomainEventMiddleware implements MiddlewareInterface
         return $stack->next()->handle($envelope, $stack);
     }
 
-    private function classDescriptorExtractor(): Closure
+    private function classDescriptorExtractor(): \Closure
     {
         return fn (callable $handler): HandlerDescriptor => new HandlerDescriptor($handler);
     }
 
     private function messageHasAlreadyBeenHandled(Envelope $envelope, HandlerDescriptor $handlerDescriptor): bool
     {
+        $stamps = $envelope->all(HandledStamp::class);
+
         $some = array_filter(
-            $envelope
-                ->all(HandledStamp::class),
-            function (HandledStamp $handledStamp) use ($handlerDescriptor): bool {
-                return $handledStamp->getHandlerName() === $handlerDescriptor->getName();
-            }
+            $stamps,
+            fn (StampInterface $stamp): bool => (
+                $stamp instanceof HandledStamp
+                && $stamp->getHandlerName() === $handlerDescriptor->getName()
+            )
         );
 
         return $some !== [];
     }
 
+    /**
+     * @param iterable<HandlerDescriptor> $handlers
+     */
     private function handleEnvelop(Envelope $envelope, iterable $handlers, bool $isDomainEvent = false): Envelope
     {
-        /** @var Event|EventReceived|Query $message */
+        /** @var EventReceived $message */
         $message = $envelope->getMessage();
 
         $handler = null;
@@ -118,7 +118,7 @@ class HandleMessageDomainEventMiddleware implements MiddlewareInterface
                     $handlerForMessageText . ' {class} handled by {handler}',
                     $context + ['handler' => $handledStamp->getHandlerName()]
                 );
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 $exceptions[] = $e;
             }
         }

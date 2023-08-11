@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Core\Component\Infrastructure\Bus\Event\MySql;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManagerInterface;
-use function Lambdish\Phunctional\each;
-use App\Core\Shared\Domain\Bus\Event\DomainEvent;
-use App\Core\Shared\Domain\Bus\Event\EventBus;
 use App\Core\Shared\Domain\Utils;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Core\Shared\Domain\Bus\Event\EventBus;
+use App\Core\Shared\Domain\Bus\Event\DomainEvent;
+
+use function Lambdish\Phunctional\each;
 
 final class MySqlDoctrineEventBus implements EventBus
 {
@@ -39,9 +40,9 @@ final class MySqlDoctrineEventBus implements EventBus
 
             $this->connection->executeUpdate(
                 <<<SQL
-                INSERT INTO domain_events (id,  aggregate_id, name,  body,  occurred_on) 
-                                   VALUES ({$id}, {$aggregateId}, {$name}, {$body}, {$occurredOn});
-SQL
+                                    INSERT INTO domain_events (id,  aggregate_id, name,  body,  occurred_on) 
+                                                       VALUES ({$id}, {$aggregateId}, {$name}, {$body}, {$occurredOn});
+                    SQL
             );
         };
     }

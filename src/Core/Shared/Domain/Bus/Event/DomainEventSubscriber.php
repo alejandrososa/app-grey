@@ -12,7 +12,7 @@ interface DomainEventSubscriber
     public const INVALID = 2;
 
     /**
-     * @return array<string, string>
+     * @return array<mixed>
      */
     public static function subscribedTo(): array;
 }

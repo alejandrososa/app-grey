@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Component\Infrastructure\Bus\Event;
 
-use App\Core\Shared\Domain\Bus\Event\DomainEvent;
 use App\Core\Shared\Domain\Utils;
-use RuntimeException;
+use App\Core\Shared\Domain\Bus\Event\DomainEvent;
 
 final class DomainEventJsonDeserializer
 {
@@ -20,8 +19,8 @@ final class DomainEventJsonDeserializer
         $eventName = $eventData['data']['type'];
         $eventClass = $this->domainEventMapping->for($eventName);
 
-        if (null === $eventClass) {
-            throw new RuntimeException("The event <{$eventName}> doesn't exist or has no subscribers");
+        if ($eventClass === null) {
+            throw new \RuntimeException("The event <{$eventName}> doesn't exist or has no subscribers");
         }
 
         return $eventClass::fromPrimitives(

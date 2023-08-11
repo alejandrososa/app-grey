@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Core\Shared\Domain\Bus\Event;
 
+/** @phpstan-consistent-constructor */
 interface EventTransformer
 {
-    /** @param array<string, string> $data */
+    /** @param array<mixed> $data */
     public function write(array $data): self;
 
-    public function read(): EventReceived|Event;
+    /** @return EventReceived|Event|array<mixed> */
+    public function read(): EventReceived|Event|array;
 }

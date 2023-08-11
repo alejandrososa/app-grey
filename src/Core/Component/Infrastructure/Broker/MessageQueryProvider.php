@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Component\Infrastructure\Broker;
 
-use Exception;
-use ReflectionClass;
-use App\Core\Shared\Domain\Broker\BrokerProvider as BaseBrokerProvider;
 use App\Core\Shared\Domain\Bus\Query\Query;
-use ReflectionException;
+use App\Core\Shared\Domain\Broker\BrokerProvider as BaseBrokerProvider;
 
 class MessageQueryProvider implements BaseBrokerProvider
 {
-    /** @param array<string, object> $queries */
+    /** @param array<mixed> $queries */
     public function __construct(private array $queries)
     {
     }
@@ -20,14 +19,16 @@ class MessageQueryProvider implements BaseBrokerProvider
         $this->queries[$contextName] = $messageQuery;
     }
 
+    /** @return array<mixed> */
     public function getAllMessageQueries(): array
     {
         return $this->queries;
     }
 
     /**
-     * @param array<string, string> $args
-     * @throws Exception
+     * @param array<mixed> $args
+     *
+     * @throws \Exception
      */
     public function getMessageQuery(string $contextName, array $args = []): Query
     {
@@ -43,14 +44,14 @@ class MessageQueryProvider implements BaseBrokerProvider
     private function guardExistsContextName(string $contextName): void
     {
         if (empty($this->queries[$contextName])) {
-            throw new Exception('Reply Message Query is not registered with the broker provider');
+            throw new \Exception('Reply Message Query is not registered with the broker provider');
         }
     }
 
     private function guardExistMessageQueryClass(mixed $queryName): void
     {
         if (!class_exists($queryName)) {
-            throw new Exception('Reply Message Query not found');
+            throw new \Exception('Reply Message Query not found');
         }
     }
 
@@ -61,16 +62,16 @@ class MessageQueryProvider implements BaseBrokerProvider
     {
         $reflectionClass = $this->getReflectionClass($queryName);
 
-        return \is_null($reflectionClass->getConstructor())
+        return is_null($reflectionClass->getConstructor())
             ? $reflectionClass->newInstanceWithoutConstructor()
             : $reflectionClass->newInstanceArgs($args);
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
-    private function getReflectionClass(mixed $queryName): ReflectionClass
+    private function getReflectionClass(mixed $queryName): \ReflectionClass
     {
-        return new ReflectionClass($queryName);
+        return new \ReflectionClass($queryName);
     }
 }

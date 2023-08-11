@@ -4,33 +4,28 @@ declare(strict_types=1);
 
 namespace App\Core\Shared\Domain;
 
-use ArrayIterator;
-use Countable;
-use IteratorAggregate;
-
-abstract class Collection implements Countable, IteratorAggregate
+/** @phpstan-consistent-constructor */
+abstract class Collection implements \Countable, \IteratorAggregate
 {
-
-    /** @param array<string, array> $items */
+    /** @param array<mixed> $items */
     public function __construct(private array $items)
     {
         Assert::arrayOf($this->type(), $items);
     }
 
-    /** @return array<ArrayIterator> */
-    public function getIterator(): ArrayIterator
+    public function getIterator(): \Traversable
     {
-        return new ArrayIterator($this->items());
+        return new \ArrayIterator($this->items());
     }
 
     public function count(): int
     {
-        return \count($this->items());
+        return count($this->items());
     }
 
     abstract protected function type(): string;
 
-    /** @return array<string, array> */
+    /** @return array<mixed> */
     protected function items(): array
     {
         return $this->items;

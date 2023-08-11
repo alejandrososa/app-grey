@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Component\Infrastructure\Bus;
 
 final class BusFactory implements BusFactoryInterface
@@ -8,6 +10,7 @@ final class BusFactory implements BusFactoryInterface
     {
     }
 
+    /** @return array<mixed>|null */
     public function getQueries(): ?array
     {
         $queries = $this->busChain->getHandlers('query');
@@ -20,6 +23,7 @@ final class BusFactory implements BusFactoryInterface
         return $handlers;
     }
 
+    /** @return array<mixed>|null */
     public function getCommands(): ?array
     {
         $commands = $this->busChain->getHandlers('command');
@@ -32,6 +36,7 @@ final class BusFactory implements BusFactoryInterface
         return $handlers;
     }
 
+    /** @return array<mixed>|null */
     public function getSubscribers(): ?array
     {
         $commands = $this->busChain->getHandlers('domain_event_subscriber');
@@ -44,6 +49,7 @@ final class BusFactory implements BusFactoryInterface
         return $handlers;
     }
 
+    /** @return array<mixed>|null */
     public function getDomainEvents(): ?array
     {
         return $this->busChain->getDomainEvents();

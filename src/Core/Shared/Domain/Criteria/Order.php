@@ -17,7 +17,7 @@ final class Order
 
     public static function fromValues(?string $orderBy, ?string $order): Order
     {
-        return null === $orderBy ? self::none() : new Order(new OrderBy($orderBy), new OrderType($order));
+        return $orderBy === null ? self::none() : new Order(new OrderBy($orderBy), new OrderType($order));
     }
 
     public static function none(): Order
@@ -42,6 +42,6 @@ final class Order
 
     public function serialize(): string
     {
-        return sprintf('%s.%s', $this->orderBy->value(), $this->orderType->value());
+        return sprintf('%s.%s', $this->orderBy, $this->orderType);
     }
 }

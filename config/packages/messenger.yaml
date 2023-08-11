@@ -22,10 +22,10 @@ framework:
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
-            OOD\Core\Shared\Domain\Bus\Command\Command: sync
-            OOD\Core\Shared\Domain\Bus\Query\Query: sync
+            #OOD\Core\Shared\Domain\Bus\Command\Command: sync
+            #OOD\Core\Shared\Domain\Bus\Query\Query: sync
 #            OOD\Core\Shared\Domain\Bus\Event\Event: broadcast
-            OOD\Core\Shared\Domain\Bus\Event\EventReceived: sync
+            #OOD\Core\Shared\Domain\Bus\Event\EventReceived: sync
 
         default_bus: command.bus
         buses:
@@ -39,4 +39,4 @@ framework:
                 default_middleware: allow_no_handlers
                 middleware:
                     - validation
-                    - App\Core\Component\Infrastructure\Messenger\Middleware\HandleMessageDomainEventMiddleware
+                    #- App\Core\Component\Infrastructure\Messenger\Middleware\HandleMessageDomainEventMiddleware

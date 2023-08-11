@@ -10,6 +10,8 @@ interface EventReceived
 
     public function eventId(): string;
 
+    public function eventName(): string;
+
     public function occurredOn(): string;
 
     /**

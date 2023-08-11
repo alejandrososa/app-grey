@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Component\Infrastructure\Bus;
 
-use App\Core\Shared\Domain\Bus\BusInterface;
-use App\Core\Shared\Domain\Bus\Command\Command;
-use App\Core\Shared\Domain\Bus\Command\CommandBus;
-use App\Core\Shared\Domain\Bus\Event\DomainEvent;
-use App\Core\Shared\Domain\Bus\Event\EventBus;
 use App\Core\Shared\Domain\Bus\Query\Query;
+use App\Core\Shared\Domain\Bus\BusInterface;
+use App\Core\Shared\Domain\Bus\Event\EventBus;
 use App\Core\Shared\Domain\Bus\Query\QueryBus;
 use App\Core\Shared\Domain\Bus\Query\Response;
+use App\Core\Shared\Domain\Bus\Command\Command;
+use App\Core\Shared\Domain\Bus\Event\DomainEvent;
+use App\Core\Shared\Domain\Bus\Command\CommandBus;
 
 class BusComponent implements BusInterface
 {

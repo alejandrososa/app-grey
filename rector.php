@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\Set\ValueObject\SetList;
 use Rector\Core\Configuration\Option;
+use Rector\PHPUnit\Set\PHPUnitSetList;
+use Rector\Symfony\Set\SymfonySetList;
 use Rector\Core\ValueObject\PhpVersion;
 use Rector\Doctrine\Set\DoctrineSetList;
-use Rector\PHPUnit\Set\PHPUnitLevelSetList;
-use Rector\PHPUnit\Set\PHPUnitSetList;
-use Rector\Set\ValueObject\SetList;
 use Rector\Symfony\Set\SensiolabsSetList;
-use Rector\Symfony\Set\SymfonySetList;
+use Rector\PHPUnit\Set\PHPUnitLevelSetList;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictConstructorRector;
 
@@ -24,9 +24,9 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon');
 
     // basic rules
-    $rectorConfig->importNames();
-    $rectorConfig->importShortClasses();
-    $rectorConfig->removeUnusedImports();
+//    $rectorConfig->importNames();
+//    $rectorConfig->importShortClasses();
+//    $rectorConfig->removeUnusedImports();
 
     $parameters->set(Option::PHP_VERSION_FEATURES, PhpVersion::PHP_82);
 
@@ -62,11 +62,11 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     // phpunit rules
-    $rectorConfig->sets([
-        PHPUnitSetList::PHPUNIT_100,
-        PHPUnitLevelSetList::UP_TO_PHPUNIT_100,
-        PHPUnitSetList::PHPUNIT_CODE_QUALITY,
-    ]);
+//    $rectorConfig->sets([
+//        PHPUnitSetList::PHPUNIT_100,
+//        PHPUnitLevelSetList::UP_TO_PHPUNIT_100,
+//        PHPUnitSetList::PHPUNIT_CODE_QUALITY,
+//    ]);
 
     $rectorConfig->indent(' ', 4);
 };

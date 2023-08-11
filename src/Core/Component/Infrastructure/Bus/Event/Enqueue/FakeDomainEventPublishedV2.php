@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Component\Infrastructure\Bus\Event\Enqueue;
 
 use App\Core\Shared\Domain\Bus\Event\DomainEvent;
 
 final class FakeDomainEventPublishedV2 extends DomainEvent
 {
+    /**
+     * @param array<mixed> $body
+     */
     public function __construct(
         string $id,
         array $body,
@@ -22,7 +27,7 @@ final class FakeDomainEventPublishedV2 extends DomainEvent
 
     public static function eventName(): string
     {
-        return 'App.core.component.v2.test';
+        return 'app.core.component.v2.test';
     }
 
     public static function fromPrimitives(
@@ -39,11 +44,13 @@ final class FakeDomainEventPublishedV2 extends DomainEvent
         );
     }
 
+    /** @return array<mixed> */
     public function toPrimitives(): array
     {
         return $this->content();
     }
 
+    /** @return array<mixed> */
     public function content(): array
     {
         return $this->body();

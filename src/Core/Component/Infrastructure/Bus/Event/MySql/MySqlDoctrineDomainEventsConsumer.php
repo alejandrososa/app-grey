@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Core\Component\Infrastructure\Bus\Event\MySql;
 
-use DateTimeImmutable;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
-use Doctrine\ORM\EntityManagerInterface;
-use function Lambdish\Phunctional\each;
-use function Lambdish\Phunctional\map;
-use App\Core\Component\Infrastructure\Bus\Event\DomainEventMapping;
-use App\Core\Shared\Domain\Utils;
 use RuntimeException;
+use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\Connection;
+use App\Core\Shared\Domain\Utils;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Core\Component\Infrastructure\Bus\Event\DomainEventMapping;
+
+use function Lambdish\Phunctional\map;
+use function Lambdish\Phunctional\each;
 
 final class MySqlDoctrineDomainEventsConsumer
 {
@@ -56,9 +56,9 @@ final class MySqlDoctrineDomainEventsConsumer
         };
     }
 
-    private function formatDate($stringDate): string
+    private function formatDate(string $stringDate): string
     {
-        return Utils::dateToString(new DateTimeImmutable($stringDate));
+        return Utils::dateToString(new \DateTimeImmutable($stringDate));
     }
 
     private function idExtractor(): callable

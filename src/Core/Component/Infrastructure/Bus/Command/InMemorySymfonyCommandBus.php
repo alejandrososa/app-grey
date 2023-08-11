@@ -6,9 +6,9 @@ namespace App\Core\Component\Infrastructure\Bus\Command;
 
 use App\Core\Shared\Domain\Bus\Command\Command;
 use App\Core\Shared\Domain\Bus\Command\CommandBus;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 final class InMemorySymfonyCommandBus implements CommandBus
 {

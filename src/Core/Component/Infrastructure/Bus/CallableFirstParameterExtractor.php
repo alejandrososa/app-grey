@@ -4,30 +4,29 @@ declare(strict_types=1);
 
 namespace App\Core\Component\Infrastructure\Bus;
 
-use ReflectionType;
-use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
-use function Lambdish\Phunctional\reindex;
-use LogicException;
-use ReflectionClass;
-use ReflectionMethod;
-use ReflectionNamedType;
 
 final class CallableFirstParameterExtractor
 {
-    public static function forCallables(iterable $callables): array
-    {
-        return map(self::unflatten(), reindex(self::classExtractor(new self()), $callables));
-    }
+    /** @return array<callable> */
+    // public static function forCallables(iterable $callables): array
+    // {
+    //    return map(self::unflatten(), reindex(self::classExtractor(new self()), $callables));
+    // }
 
+    /**
+     * @param iterable<callable> $callables
+     *
+     * @return array<mixed>
+     */
     public static function forPipedCallables(iterable $callables): array
     {
         return reduce(self::pipedCallablesReducer(), $callables, []);
     }
 
-    public function extract($class): ?string
+    public function extract(string $class): ?string
     {
-        $reflectionClass = new ReflectionClass($class);
+        $reflectionClass = new \ReflectionClass($class);
         $method = $reflectionClass->getMethod('__invoke');
 
         if ($this->hasOnlyOneParameter($method)) {
@@ -37,10 +36,10 @@ final class CallableFirstParameterExtractor
         return null;
     }
 
-    private static function classExtractor(CallableFirstParameterExtractor $callableFirstParameterExtractor): callable
-    {
-        return static fn (callable $handler): ?string => $callableFirstParameterExtractor->extract($handler);
-    }
+    // private function classExtractor(CallableFirstParameterExtractor $callableFirstParameterExtractor): callable
+    // {
+    //    return static fn (callable $handler): ?string => $callableFirstParameterExtractor->extract($handler);
+    // }
 
     private static function pipedCallablesReducer(): callable
     {
@@ -55,25 +54,25 @@ final class CallableFirstParameterExtractor
         };
     }
 
-    private static function unflatten(): callable
-    {
-        return static fn ($value): array => [$value];
-    }
+    //    private static function unflatten(): callable
+    //    {
+    //        return static fn ($value): array => [$value];
+    //    }
 
-    private function firstParameterClassFrom(ReflectionMethod $reflectionMethod): string
+    private function firstParameterClassFrom(\ReflectionMethod $reflectionMethod): string
     {
-        /** @var ReflectionNamedType $reflectionType */
+        /** @var \ReflectionNamedType $reflectionType */
         $reflectionType = $reflectionMethod->getParameters()[0]->getType();
 
-        if (!$reflectionType instanceof ReflectionType) {
-            throw new LogicException('Missing type hint for the first parameter of __invoke');
+        if (!$reflectionType instanceof \ReflectionType) {
+            throw new \LogicException('Missing type hint for the first parameter of __invoke');
         }
 
         return $reflectionType->getName();
     }
 
-    private function hasOnlyOneParameter(ReflectionMethod $reflectionMethod): bool
+    private function hasOnlyOneParameter(\ReflectionMethod $reflectionMethod): bool
     {
-        return 1 === $reflectionMethod->getNumberOfParameters();
+        return $reflectionMethod->getNumberOfParameters() === 1;
     }
 }

@@ -3,6 +3,7 @@ grumphp:
     process_timeout: 120
     stop_on_failure: false
     ignore_unstaged_changes: false
+    additional_info: "\nThank you for keeping the code quality better.\nHappy Coding!!\n"
     tasks:
         phpversion:
             project: '8.2'
@@ -21,8 +22,8 @@ grumphp:
             enforce_no_subject_punctuations: false
             enforce_no_subject_trailing_period: true
             enforce_single_lined_subject: true
-            max_body_width: 80
-            max_subject_width: 80
+            max_body_width: 120
+            max_subject_width: 100
             #matchers:
             #    Commit message must contain issue topic and number: >-
             #        /^\[(HOTFIX|BUGFIX|FEATURE|INFRA|MERGE|RELEASE)]\sICRSICRP-\d+\s::\s.*\s\[(COMPLETED|WIP)]/
@@ -87,24 +88,47 @@ grumphp:
                 priority: 90
         phpstan:
             level: 6
+            configuration: 'phpstan.neon'
             triggered_by: [ 'php' ]
             force_patterns: []
-            ignore_patterns: []
+            ignore_patterns:
+                - /tests\/(.*)/
             memory_limit: '-1'
             metadata:
                 priority: 90
+            use_grumphp_paths: true
         phpcs:
-            standard: PSR12
-        phpcsfixer:
+            standard: 'phpcs.xml.dist'
+            tab_width: 4
+            severity: 5 # can remove this to dis-allow all level of severity.
+            error_severity: 5
+            warning_severity: 5
+            report: full
+            triggered_by: [ 'php' ]
+            ignore_patterns:
+                - /tests\/(.*)/
+                - /var\/(.*)/
+            exclude: []
+            metadata:
+                priority: 70
+        phpcsfixer2:
             allow_risky: true
-            config: .php-cs-fixer.dist.php
+            config: '.php-cs-fixer.dist.php'
             using_cache: true
+            cache_file: '.php-cs-fixer.cache'
             config_contains_finder: true
             verbose: true
+        phpcpd:
+            directory: ['.']
+            exclude: ['vendor/','var/']
+            fuzzy: false
+            min_lines: 5
+            min_tokens: 70
+            triggered_by: ['php']
         phpmd:
             ruleset:
                 - phpmd.xml
-            exclude: []
+            exclude: ['tests/']
             triggered_by: ['php']
         phpunit:
             always_execute: true

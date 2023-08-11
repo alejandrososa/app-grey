@@ -1,12 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Component\Infrastructure\Bus;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class BusChain
 {
+    /**
+     * @var array<mixed>
+     */
     private array $handlers = [];
+
+    /**
+     * @var array<mixed>
+     */
     private array $domainEvents = [];
 
     public function __construct(private ContainerInterface $container)
@@ -18,6 +27,7 @@ final class BusChain
         $this->handlers[][$type] = $handler;
     }
 
+    /** @return array<mixed>|null */
     public function getHandlers(string $type): ?array
     {
         $handlers = [];
@@ -37,6 +47,7 @@ final class BusChain
         $this->domainEvents[] = $domainEvent;
     }
 
+    /** @return array<mixed>|null */
     public function getDomainEvents(): ?array
     {
         return $this->domainEvents;

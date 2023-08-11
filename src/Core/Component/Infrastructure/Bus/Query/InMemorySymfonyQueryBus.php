@@ -7,10 +7,10 @@ namespace App\Core\Component\Infrastructure\Bus\Query;
 use App\Core\Shared\Domain\Bus\Query\Query;
 use App\Core\Shared\Domain\Bus\Query\QueryBus;
 use App\Core\Shared\Domain\Bus\Query\Response;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 final class InMemorySymfonyQueryBus implements QueryBus
 {
@@ -29,7 +29,7 @@ final class InMemorySymfonyQueryBus implements QueryBus
             throw new QueryNotRegisteredError($query);
         } catch (HandlerFailedException $e) {
             throw $e->getPrevious();
-//            throw new QueryThrowError($e->getNestedExceptions()[0]?->getMessage());
+            //            throw new QueryThrowError($e->getNestedExceptions()[0]?->getMessage());
         }
     }
 }

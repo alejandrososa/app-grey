@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Shared\Domain\Model\Security;
 
 interface Permissions
@@ -8,7 +10,7 @@ interface Permissions
     public const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
-    const ALL_ROLES = [
+    final public const ALL_ROLES = [
         self::ROLE_USER,
         self::ROLE_EMPLOYEE,
         self::ROLE_ADMIN,

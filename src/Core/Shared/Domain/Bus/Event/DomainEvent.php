@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Shared\Domain\Bus\Event;
 
-use App\Core\Shared\Domain\Utils;
-use DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
+use App\Core\Shared\Domain\Utils;
 
 abstract class DomainEvent implements Event
 {
@@ -23,7 +22,7 @@ abstract class DomainEvent implements Event
         string $occurredOn = null
     ) {
         $this->eventId = $eventId ?: Uuid::v4();
-        $this->occurredOn = $occurredOn ?: Utils::dateToString(new DateTimeImmutable());
+        $this->occurredOn = $occurredOn ?: Utils::dateToString(new \DateTimeImmutable());
     }
 
     /** @param string[] $body */

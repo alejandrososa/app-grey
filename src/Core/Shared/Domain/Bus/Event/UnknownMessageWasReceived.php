@@ -6,7 +6,7 @@ namespace App\Core\Shared\Domain\Bus\Event;
 
 final class UnknownMessageWasReceived implements Event
 {
-    /** @param array<string, string> $body */
+    /** @param array<mixed> $body */
     public function __construct(private array $body)
     {
     }
@@ -37,7 +37,7 @@ final class UnknownMessageWasReceived implements Event
         return '';
     }
 
-    /** @param array<string, string> $data */
+    /** @param array<mixed> $data */
     public static function fromPrimitives(array $data): Event
     {
         return new self($data);

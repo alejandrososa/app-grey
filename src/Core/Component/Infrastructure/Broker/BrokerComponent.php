@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Component\Infrastructure\Broker;
 
 use App\Core\Shared\Domain\Broker\Broker;
-use App\Core\Shared\Domain\Broker\BrokerProvider;
 use App\Core\Shared\Domain\Bus\BusInterface;
 use App\Core\Shared\Domain\Bus\Query\Response;
+use App\Core\Shared\Domain\Broker\BrokerProvider;
 
 class BrokerComponent implements Broker
 {

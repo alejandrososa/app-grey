@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Core\Component\Infrastructure\Slug;
@@ -8,10 +9,7 @@ use App\Core\Shared\Domain\Slug\Sluger;
 
 class Slug implements Sluger
 {
-    /**
-     * @var Slugify
-     */
-    private $slugify;
+    private Slugify $slugify;
 
     public function __construct()
     {
@@ -23,7 +21,10 @@ class Slug implements Sluger
         );
     }
 
-    public function slugify($string, $options = null): string
+    /**
+     * @param array<mixed>|null $options
+     */
+    public function slugify(string $string, array $options = null): string
     {
         return $this->slugify->slugify($string, $options);
     }

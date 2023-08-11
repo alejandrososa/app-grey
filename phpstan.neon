@@ -5,5 +5,7 @@ parameters:
     level: 6
     paths:
         - src/
-        - tests/
+    treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false
+    #ignoreErrors:
+    #	- '#Test::data[a-zA-Z0-9_]+\(\) return type has no value type specified in iterable type#'

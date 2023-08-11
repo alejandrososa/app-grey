@@ -13,6 +13,9 @@ final class Filter
     ) {
     }
 
+    /**
+     * @param array<mixed> $values
+     */
     public static function fromValues(array $values): self
     {
         return new self(
@@ -39,6 +42,6 @@ final class Filter
 
     public function serialize(): string
     {
-        return sprintf('%s.%s.%s', $this->filterField->value(), $this->filterOperator->value(), $this->filterValue->value());
+        return sprintf('%s.%s.%s', $this->filterField, $this->filterOperator, $this->filterValue);
     }
 }

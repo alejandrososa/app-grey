@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Core\Component\Infrastructure\Messenger\Command;
 
-use ReflectionClass;
-use ReflectionException;
-use Symfony\Component\Console\Exception\RuntimeException;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Messenger\Command\DebugCommand;
+use Symfony\Component\Console\Exception\RuntimeException;
 
 class DebugMessagesCommand extends DebugCommand
 {
     protected static $defaultName = 'debug:messenger';
 
+    /** @var array<mixed> */
     private array $mapping;
 
+    /** @param array<mixed> $mapping */
     public function __construct(array $mapping = [])
     {
         $this->mapping = $mapping;
@@ -35,7 +35,8 @@ class DebugMessagesCommand extends DebugCommand
             if (!isset($mapping[$bus])) {
                 $keys = implode('", "', array_keys($this->mapping));
 
-                throw new RuntimeException(sprintf('Bus "%s" does not exist. Known buses are "%s".', $bus, $keys));
+                $message = sprintf('Bus "%s" does not exist. Known buses are "%s".', $bus, $keys);
+                throw new RuntimeException($message);
             }
             $mapping = [$bus => $mapping[$bus]];
         }
@@ -45,7 +46,10 @@ class DebugMessagesCommand extends DebugCommand
 
             $tableRows = [];
             foreach ($handlersByMessage as $message => $handlers) {
-                if (($description = self::getClassDescription($message)) !== '' && ($description = self::getClassDescription($message)) !== '0') {
+                if (
+                    ($description = self::getClassDescription($message)) !== ''
+                    && ($description = self::getClassDescription($message)) !== '0'
+                ) {
                     $tableRows[] = [sprintf('<comment>%s</>', $description)];
                 }
 
@@ -62,10 +66,12 @@ class DebugMessagesCommand extends DebugCommand
                         $label = '<fg=cyan>Domain event: <info>\'%s\'</info> wrapped in %s</fg=cyan>';
                         $tableRows[] = [sprintf($label, $domainEvent, $message)];
                         foreach ($domainEventSubscribers as $domainEventSubscriber) {
-                            $tableRows[] = [
-                                sprintf('    handled by <info>%s</>', $domainEventSubscriber[0]) . $this->formatConditions($domainEventSubscriber[1]),
-                            ];
-                            if (($handlerDescription = self::getClassDescription($domainEventSubscriber[0])) !== '' && ($handlerDescription = self::getClassDescription($domainEventSubscriber[0])) !== '0') {
+                            $messageWithFormat = sprintf('   handled by <info>%s</>', $domainEventSubscriber[0]);
+                            $tableRows[] = [$messageWithFormat . $this->formatConditions($domainEventSubscriber[1])];
+                            if (
+                                ($handlerDescription = self::getClassDescription($domainEventSubscriber[0])) !== ''
+                                && ($handlerDescription = self::getClassDescription($domainEventSubscriber[0])) !== '0'
+                            ) {
                                 $tableRows[] = [sprintf('               <comment>%s</>', $handlerDescription)];
                             }
                         }
@@ -78,7 +84,10 @@ class DebugMessagesCommand extends DebugCommand
                         $tableRows[] = [
                             sprintf('    handled by <info>%s</>', $handler[0]) . $this->formatConditions($handler[1]),
                         ];
-                        if (($handlerDescription = self::getClassDescription($handler[0])) !== '' && ($handlerDescription = self::getClassDescription($handler[0])) !== '0') {
+                        if (
+                            ($handlerDescription = self::getClassDescription($handler[0])) !== ''
+                            && ($handlerDescription = self::getClassDescription($handler[0])) !== '0'
+                        ) {
                             $tableRows[] = [sprintf('               <comment>%s</>', $handlerDescription)];
                         }
                     }
@@ -99,6 +108,7 @@ class DebugMessagesCommand extends DebugCommand
         return 0;
     }
 
+    /** @param array<mixed> $options */
     private function formatConditions(array $options): string
     {
         if ($options === []) {
@@ -116,14 +126,14 @@ class DebugMessagesCommand extends DebugCommand
     private static function getClassDescription(string $class): string
     {
         try {
-            $reflectionClass = new ReflectionClass($class);
+            $reflectionClass = new \ReflectionClass($class);
 
             if ($docComment = $reflectionClass->getDocComment()) {
-                $docComment = preg_split('#\n\s*\*\s*[\n@]#', substr($docComment, 3, -2), 2)[0];
+                $docComment = preg_split('#\n\s*\*\s*[\n@]#', mb_substr($docComment, 3, -2), 2)[0];
 
                 return trim(preg_replace('#\s*\n\s*\*\s*#', ' ', $docComment));
             }
-        } catch (ReflectionException $e) {
+        } catch (\ReflectionException $e) {
         }
 
         return '';

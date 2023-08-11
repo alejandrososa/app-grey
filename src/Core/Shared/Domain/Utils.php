@@ -4,32 +4,28 @@ declare(strict_types=1);
 
 namespace App\Core\Shared\Domain;
 
-use DateTimeImmutable;
-use DateTimeInterface;
 use function Lambdish\Phunctional\filter;
-use ReflectionClass;
-use RuntimeException;
 
 final class Utils
 {
     public static function endsWith(string $needle, string $haystack): bool
     {
-        $length = strlen($needle);
+        $length = mb_strlen($needle);
         if ($length === 0) {
             return true;
         }
 
-        return substr($haystack, -$length) === $needle;
+        return mb_substr($haystack, -$length) === $needle;
     }
 
-    public static function dateToString(DateTimeInterface $date): string
+    public static function dateToString(\DateTimeInterface $date): string
     {
-        return $date->format(DateTimeInterface::ATOM);
+        return $date->format(\DateTimeInterface::ATOM);
     }
 
-    public static function stringToDate(string $date): DateTimeImmutable
+    public static function stringToDate(string $date): \DateTimeImmutable
     {
-        return new DateTimeImmutable($date);
+        return new \DateTimeImmutable($date);
     }
 
     /** @param array<string, string> $values */
@@ -38,13 +34,13 @@ final class Utils
         return json_encode($values, JSON_THROW_ON_ERROR);
     }
 
-    /** @return array<string> */
+    /** @return array<mixed> */
     public static function jsonDecode(string $json): array
     {
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new RuntimeException('Unable to parse response body into JSON: ' . json_last_error());
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException('Unable to parse response body into JSON: ' . json_last_error());
         }
 
         return $data;
@@ -52,7 +48,8 @@ final class Utils
 
     public static function toSnakeCase(string $text): string
     {
-        return ctype_lower($text) ? $text : strtolower(preg_replace('/([^A-Z\s])([A-Z])/', '$1_$2', $text));
+        return ctype_lower($text)
+            ? $text : mb_strtolower(preg_replace('/([^A-Z\s])([A-Z])/', '$1_$2', $text));
     }
 
     public static function toCamelCase(string $text): string
@@ -61,7 +58,8 @@ final class Utils
     }
 
     /**
-     * @param array<string, string> $array
+     * @param array<mixed> $array
+     *
      * @return array<string>
      */
     public static function dot(array $array, string $prepend = ''): array
@@ -82,27 +80,32 @@ final class Utils
     public static function filesIn(string $path, string $fileType): array
     {
         return filter(
-            static fn(string $possibleModule): string|false => strstr($possibleModule, $fileType),
+            fn (string $possibleModule): string|bool => mb_strstr($possibleModule, $fileType),
             scandir($path)
         );
     }
 
     public static function extractClassName(object|string $object): string
     {
-        $reflectionClass = new ReflectionClass($object);
+        $reflectionClass = new \ReflectionClass($object);
 
         return $reflectionClass->getShortName();
     }
 
     public static function extractClassNameArguments(object|string $object): ?string
     {
-        $reflectionClass = new ReflectionClass($object);
+        $reflectionClass = new \ReflectionClass($object);
 
-        $params = $reflectionClass->getConstructor()?->getParameters() ?? [];
+        $params = [];
+        if ($reflectionClass->getConstructor()->getParameters()) {
+            $params = $reflectionClass->getConstructor()->getParameters();
+        }
 
         $args = [];
         foreach ($params as $param) {
-            $args[$param->getName()] = $param->getType()?->getName();
+            if ($param instanceof \ReflectionParameter && $param->getType() instanceof \ReflectionType) {
+                $args[$param->getName()] = (string)$param->getType();
+            }
         }
 
         return self::jsonEncode($args);
@@ -110,7 +113,7 @@ final class Utils
 
     public static function extractContextAndSubDomain(object|string $object): string
     {
-        $reflectionClass = new ReflectionClass($object);
+        $reflectionClass = new \ReflectionClass($object);
 
         $namespace = $reflectionClass->getNamespaceName();
 
@@ -120,7 +123,11 @@ final class Utils
         return sprintf('%s\\%s', $context, $subDomain);
     }
 
-    /** @param array<iterable> $iterable */
+    /**
+     * @param array<mixed> $iterable
+     *
+     * @return array<mixed>
+     */
     public static function iterableToArray(iterable $iterable): array
     {
         if (\is_array($iterable)) {

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Core\Component\Infrastructure\Logger;
 
-use App\Core\Shared\Domain\Logger\Logger;
 use Psr\Log\LoggerInterface;
+use App\Core\Shared\Domain\Logger\Logger;
 
 class LoggerComponent implements Logger
 {
     public function __construct(private LoggerInterface $logger)
     {
     }
+
     public function info(string $message, array $context = []): void
     {
         $this->logger->info($message, $context);

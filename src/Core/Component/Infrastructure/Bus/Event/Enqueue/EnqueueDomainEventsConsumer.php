@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Component\Infrastructure\Bus\Event\Enqueue;
 
-use DateTimeImmutable;
-use function Lambdish\Phunctional\each;
-use App\Core\Component\Infrastructure\Bus\Event\DomainEventMapping;
-use App\Core\Shared\Domain\Utils;
 use RuntimeException;
+use App\Core\Shared\Domain\Utils;
+use App\Core\Component\Infrastructure\Bus\Event\DomainEventMapping;
+
+use function Lambdish\Phunctional\each;
 
 class EnqueueDomainEventsConsumer
 {
@@ -38,8 +40,8 @@ class EnqueueDomainEventsConsumer
         };
     }
 
-    private function formatDate($stringDate): string
+    private function formatDate(string $stringDate): string
     {
-        return Utils::dateToString(new DateTimeImmutable($stringDate));
+        return Utils::dateToString(new \DateTimeImmutable($stringDate));
     }
 }

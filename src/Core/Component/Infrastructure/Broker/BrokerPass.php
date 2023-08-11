@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Component\Infrastructure\Broker;
 
 use App\Core\Shared\Domain\Utils;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 class BrokerPass implements CompilerPassInterface
 {
     public function __construct(private readonly Utils $utils)
     {
     }
+
     public function process(ContainerBuilder $containerBuilder): void
     {
         // always first check if the primary service is defined
@@ -33,10 +36,10 @@ class BrokerPass implements CompilerPassInterface
         foreach (array_keys($taggedServices) as $id) {
             $contextLinkName = $this->getContextLinkName($id);
 
-            //set public service true
+            // set public service true
             $containerBuilder->findDefinition($id)->setPublic(true);
 
-            //add message query to broker provider
+            // add message query to broker provider
             $definition->addMethodCall('addMessageQuery', [$contextLinkName, $id]);
         }
     }

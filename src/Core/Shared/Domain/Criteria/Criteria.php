@@ -24,6 +24,7 @@ final class Criteria
         return !$this->order->isNone();
     }
 
+    /** @return array<Filter> */
     public function plainFilters(): array
     {
         return $this->filters->filters();

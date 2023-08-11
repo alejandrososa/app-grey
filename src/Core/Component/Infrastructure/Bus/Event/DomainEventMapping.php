@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Core\Component\Infrastructure\Bus\Event;
 
+use App\Core\Component\Infrastructure\Bus\BusFactoryInterface;
+
 use function Lambdish\Phunctional\reduce;
 use function Lambdish\Phunctional\reindex;
-use App\Core\Component\Infrastructure\Bus\BusFactoryInterface;
-use RuntimeException;
 
 final class DomainEventMapping
 {
-    private $mapping;
+    /**
+     * @var array<mixed>
+     */
+    private array $mapping;
 
     public function __construct(BusFactoryInterface $busFactory = null)
     {
@@ -19,10 +22,11 @@ final class DomainEventMapping
         $this->mapping = reduce($this->eventsExtractor(), $mapping, []);
     }
 
-    public function for(string $name)
+    public function for(string $name): mixed
     {
         if (!isset($this->mapping[$name])) {
-            throw new RuntimeException("The Domain Event Class for <{$name}> doesn't exists or have no subscribers");
+            $message = "The Domain Event Class for <{$name}> doesn't exists or have no subscribers";
+            throw new \RuntimeException($message);
         }
 
         return $this->mapping[$name];

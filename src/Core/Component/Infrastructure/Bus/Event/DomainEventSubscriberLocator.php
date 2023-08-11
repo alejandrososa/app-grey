@@ -9,6 +9,7 @@ use App\Core\Component\Infrastructure\Bus\CallableFirstParameterExtractor;
 
 final class DomainEventSubscriberLocator
 {
+    /** @var array<mixed> */
     private array $mapping;
 
     public function __construct(BusFactoryInterface $busFactory)
@@ -16,6 +17,7 @@ final class DomainEventSubscriberLocator
         $this->mapping = $busFactory->getSubscribers();
     }
 
+    /** @return array<object> */
     public function allSubscribedTo(string $eventClass): array
     {
         $formatted = CallableFirstParameterExtractor::forPipedCallables($this->mapping);
@@ -23,6 +25,7 @@ final class DomainEventSubscriberLocator
         return $formatted[$eventClass] ?? [];
     }
 
+    /** @return array<mixed> */
     public function all(): array
     {
         return $this->mapping;
