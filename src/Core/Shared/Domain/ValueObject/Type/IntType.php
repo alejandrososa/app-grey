@@ -15,10 +15,7 @@ final class IntType implements TypeInterface
 
     public function __construct()
     {
-        $this->typeExpectation = new TypeExpectation(
-            acceptsClass: null,
-            acceptsInt: true
-        );
+        $this->typeExpectation = TypeExpectation::createIntType();
     }
 
     public function getExpectation(): TypeExpectationInterface

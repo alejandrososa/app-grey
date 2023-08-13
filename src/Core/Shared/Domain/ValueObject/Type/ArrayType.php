@@ -16,10 +16,7 @@ final class ArrayType implements TypeInterface
 
     public function __construct()
     {
-        $this->typeExpectation = new TypeExpectation(
-            acceptsClass: null,
-            acceptsArray: true
-        );
+        $this->typeExpectation = TypeExpectation::createArrayType();
     }
 
     public function getExpectation(): TypeExpectationInterface

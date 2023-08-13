@@ -14,12 +14,12 @@ final class TypeExpectation implements TypeExpectationInterface
     private bool $acceptsArray;
 
     public function __construct(
-        string $acceptsClass = null,
-        bool $acceptsString = false,
-        bool $acceptsInt = false,
-        bool $acceptsFloat = false,
-        bool $acceptsBool = false,
-        bool $acceptsArray = false
+        ?string $acceptsClass,
+        bool $acceptsString,
+        bool $acceptsInt,
+        bool $acceptsFloat,
+        bool $acceptsBool,
+        bool $acceptsArray,
     ) {
         $this->acceptsClass = $acceptsClass;
         $this->acceptsString = $acceptsString;
@@ -27,6 +27,89 @@ final class TypeExpectation implements TypeExpectationInterface
         $this->acceptsFloat = $acceptsFloat;
         $this->acceptsBool = $acceptsBool;
         $this->acceptsArray = $acceptsArray;
+    }
+
+    public static function createClassType(
+        string $acceptsClass,
+        bool $acceptsString,
+        bool $acceptsInt,
+        bool $acceptsFloat,
+        bool $acceptsBool,
+        bool $acceptsArray
+    ): self {
+        return new self($acceptsClass, $acceptsString, $acceptsInt, $acceptsFloat, $acceptsBool, $acceptsArray);
+    }
+
+    public static function createStringType(): self
+    {
+        return new self(
+            acceptsClass: null,
+            acceptsString: true,
+            acceptsInt: false,
+            acceptsFloat: false,
+            acceptsBool: false,
+            acceptsArray: false
+        );
+    }
+
+    public static function createIntType(): self
+    {
+        return new self(
+            acceptsClass: null,
+            acceptsString: false,
+            acceptsInt: true,
+            acceptsFloat: false,
+            acceptsBool: false,
+            acceptsArray: false
+        );
+    }
+
+    public static function createFloatType(): self
+    {
+        return new self(
+            acceptsClass: null,
+            acceptsString: false,
+            acceptsInt: false,
+            acceptsFloat: true,
+            acceptsBool: false,
+            acceptsArray: false
+        );
+    }
+
+    public static function createBoolType(): self
+    {
+        return new self(
+            acceptsClass: null,
+            acceptsString: false,
+            acceptsInt: false,
+            acceptsFloat: false,
+            acceptsBool: true,
+            acceptsArray: false
+        );
+    }
+
+    public static function createArrayType(): self
+    {
+        return new self(
+            acceptsClass: null,
+            acceptsString: false,
+            acceptsInt: false,
+            acceptsFloat: false,
+            acceptsBool: false,
+            acceptsArray: true
+        );
+    }
+
+    public static function createVoidType(): self
+    {
+        return new self(
+            acceptsClass: null,
+            acceptsString: false,
+            acceptsInt: false,
+            acceptsFloat: false,
+            acceptsBool: false,
+            acceptsArray: false
+        );
     }
 
     public function acceptsNull(): bool

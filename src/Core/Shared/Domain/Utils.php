@@ -66,10 +66,10 @@ final class Utils
     {
         $results = [];
         foreach ($array as $key => $value) {
+            $results[$prepend . $key] = $value;
             if (\is_array($value) && $value !== []) {
-                $results = array_merge($results, static::dot($value, $prepend . $key . '.'));
-            } else {
-                $results[$prepend . $key] = $value;
+                $dot = static::dot($value, $prepend . $key . '.');
+                $results = array_merge($results, $dot);
             }
         }
 

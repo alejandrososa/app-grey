@@ -156,19 +156,16 @@ class DateTimeValue implements
         return $this->value->format($format);
     }
 
-    /**
-     * @param \DateTimeInterface|DateTimeValue $datetime2
-     */
-    final public function diff($datetime2, bool $absolute = false): \DateInterval
+    final public function diff(\DateTimeInterface|DateTimeValue $datetime2): \DateInterval
     {
-        if ($datetime2 instanceof DateTimeValue) {
+        if ($datetime2 instanceof self) {
             $datetime2 = $datetime2->toDateTimeImmutable();
         } elseif (!$datetime2 instanceof \DateTimeInterface) {
             /* @psalm-suppress DocblockTypeContradiction check in runtime too */
             throw new \InvalidArgumentException();
         }
 
-        return $this->value->diff($datetime2, $absolute);
+        return $this->value->diff($datetime2);
     }
 
     final public function modify(string $modifier): self

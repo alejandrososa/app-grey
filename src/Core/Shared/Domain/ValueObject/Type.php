@@ -4,27 +4,22 @@ declare(strict_types=1);
 
 namespace App\Core\Shared\Domain\ValueObject;
 
-use App\Core\Shared\Domain\ValueObject\Type\IntType;
-use App\Core\Shared\Domain\ValueObject\Type\BoolType;
-use App\Core\Shared\Domain\ValueObject\Type\VoidType;
-use App\Core\Shared\Domain\ValueObject\Type\ArrayType;
 use App\Core\Shared\Domain\ValueObject\Type\ClassType;
-use App\Core\Shared\Domain\ValueObject\Type\FloatType;
-use App\Core\Shared\Domain\ValueObject\Type\StringType;
 use App\Core\Shared\Domain\ValueObject\Type\NullableType;
 use App\Core\Shared\Domain\ValueObject\Type\TypeInterface;
+use App\Core\Shared\Domain\ValueObject\Type\Factory\TypeManager;
 
 /**
  * @see \App\Tests\Core\Shared\Domain\ValueObject\TypeTest
  */
 final class Type
 {
-    private const PHP_STRING = 'string';
-    private const PHP_INT = 'int';
-    private const PHP_FLOAT = 'float';
-    private const PHP_BOOL = 'bool';
-    private const PHP_ARRAY = 'array';
-    private const PHP_VOID = 'void';
+    public const PHP_STRING = 'string';
+    public const PHP_INT = 'int';
+    public const PHP_FLOAT = 'float';
+    public const PHP_BOOL = 'bool';
+    public const PHP_ARRAY = 'array';
+    public const PHP_VOID = 'void';
 
     private function __construct()
     {
@@ -32,11 +27,11 @@ final class Type
 
     private static function forTypeReflection(\ReflectionNamedType $reflectionNamedType): TypeInterface
     {
+        /** @psalm-suppress ArgumentTypeCoercion */
+        $type = self::forClass($reflectionNamedType->getName());
+
         if ($reflectionNamedType->isBuiltin()) {
             $type = self::forBuiltinType($reflectionNamedType->getName());
-        } else {
-            /** @psalm-suppress ArgumentTypeCoercion */
-            $type = self::forClass($reflectionNamedType->getName());
         }
 
         if ($reflectionNamedType->allowsNull()) {
@@ -58,22 +53,7 @@ final class Type
 
     public static function forBuiltinType(string $name): TypeInterface
     {
-        switch ($name) {
-            case self::PHP_STRING:
-                return new StringType();
-            case self::PHP_INT:
-                return new IntType();
-            case self::PHP_FLOAT:
-                return new FloatType();
-            case self::PHP_BOOL:
-                return new BoolType();
-            case self::PHP_ARRAY:
-                return new ArrayType();
-            case self::PHP_VOID:
-                return new VoidType();
-            default:
-                throw new \InvalidArgumentException("Not a builtin type: $name.");
-        }
+        return (new TypeManager())->createType($name);
     }
 
     private static function forClassReflection(\ReflectionClass $reflectionClass): TypeInterface

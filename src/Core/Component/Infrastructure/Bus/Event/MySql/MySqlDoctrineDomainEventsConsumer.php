@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Core\Component\Infrastructure\Bus\Event\MySql;
 
-use RuntimeException;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Connection;
 use App\Core\Shared\Domain\Utils;
@@ -42,17 +41,14 @@ final class MySqlDoctrineDomainEventsConsumer
     private function executeSubscribers(callable $subscribers): callable
     {
         return function (array $rawEvent) use ($subscribers): void {
-            try {
-                $domainEventClass = $this->domainEventMapping->for($rawEvent['name']);
-                $domainEvent = $domainEventClass::fromPrimitives(
-                    $rawEvent['aggregate_id'],
-                    Utils::jsonDecode($rawEvent['body']),
-                    $rawEvent['id'],
-                    $this->formatDate($rawEvent['occurred_on'])
-                );
-                $subscribers($domainEvent);
-            } catch (RuntimeException) {
-            }
+            $domainEventClass = $this->domainEventMapping->for($rawEvent['name']);
+            $domainEvent = $domainEventClass::fromPrimitives(
+                $rawEvent['aggregate_id'],
+                Utils::jsonDecode($rawEvent['body']),
+                $rawEvent['id'],
+                $this->formatDate($rawEvent['occurred_on'])
+            );
+            $subscribers($domainEvent);
         };
     }
 

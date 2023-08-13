@@ -15,7 +15,7 @@ final class VoidType implements TypeInterface
 
     public function __construct()
     {
-        $this->typeExpectation = new TypeExpectation(acceptsClass: null);
+        $this->typeExpectation = TypeExpectation::createVoidType();
     }
 
     public function getExpectation(): TypeExpectationInterface
@@ -25,6 +25,8 @@ final class VoidType implements TypeInterface
 
     /**
      * @throws ViolationExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function prepareValue(mixed $value): never
     {

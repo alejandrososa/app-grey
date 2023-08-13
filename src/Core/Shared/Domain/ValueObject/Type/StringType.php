@@ -15,10 +15,7 @@ final class StringType implements TypeInterface
 
     public function __construct()
     {
-        $this->typeExpectation = new TypeExpectation(
-            acceptsClass: null,
-            acceptsString: true
-        );
+        $this->typeExpectation = TypeExpectation::createStringType();
     }
 
     public function getExpectation(): TypeExpectationInterface

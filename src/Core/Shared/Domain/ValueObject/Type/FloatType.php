@@ -15,10 +15,7 @@ final class FloatType implements TypeInterface
 
     public function __construct()
     {
-        $this->typeExpectation = new TypeExpectation(
-            acceptsClass: null,
-            acceptsFloat: true
-        );
+        $this->typeExpectation = TypeExpectation::createFloatType();
     }
 
     public function getExpectation(): TypeExpectationInterface

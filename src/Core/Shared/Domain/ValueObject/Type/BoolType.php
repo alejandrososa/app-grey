@@ -15,10 +15,7 @@ final class BoolType implements TypeInterface
 
     public function __construct()
     {
-        $this->typeExpectation = new TypeExpectation(
-            acceptsClass: null,
-            acceptsBool: true
-        );
+        $this->typeExpectation = TypeExpectation::createBoolType();
     }
 
     public function getExpectation(): TypeExpectationInterface

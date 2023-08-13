@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Core\Component\Infrastructure\Bus\Event\Enqueue;
 
-use RuntimeException;
 use App\Core\Shared\Domain\Utils;
 use App\Core\Component\Infrastructure\Bus\Event\DomainEventMapping;
 
@@ -17,7 +16,7 @@ class EnqueueDomainEventsConsumer
     ) {
     }
 
-    public function consume(callable $subscribers, int $eventsToConsume): void
+    public function consume(callable $subscribers): void
     {
         $events = [];
         each($this->executeSubscribers($subscribers), $events);
@@ -26,17 +25,14 @@ class EnqueueDomainEventsConsumer
     private function executeSubscribers(callable $subscribers): callable
     {
         return function (array $rawEvent) use ($subscribers): void {
-            try {
-                $domainEventClass = $this->domainEventMapping->for($rawEvent['name']);
-                $domainEvent = $domainEventClass::fromPrimitives(
-                    $rawEvent['aggregate_id'],
-                    Utils::jsonDecode($rawEvent['body']),
-                    $rawEvent['id'],
-                    $this->formatDate($rawEvent['occurred_on'])
-                );
-                $subscribers($domainEvent);
-            } catch (RuntimeException) {
-            }
+            $domainEventClass = $this->domainEventMapping->for($rawEvent['name']);
+            $domainEvent = $domainEventClass::fromPrimitives(
+                $rawEvent['aggregate_id'],
+                Utils::jsonDecode($rawEvent['body']),
+                $rawEvent['id'],
+                $this->formatDate($rawEvent['occurred_on'])
+            );
+            $subscribers($domainEvent);
         };
     }
 
