@@ -119,15 +119,14 @@ grumphp:
             config_contains_finder: true
             verbose: true
         phpcpd:
-            directory: ['.']
+            directory: ['src/']
             exclude: ['vendor/','var/']
             fuzzy: false
             min_lines: 5
             min_tokens: 70
             triggered_by: ['php']
         phpmd:
-            ruleset:
-                - phpmd.xml
+            ruleset: ['phpmd.xml']
             exclude: ['tests/']
             triggered_by: ['php']
         phpunit:
