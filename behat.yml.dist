@@ -1,0 +1,32 @@
+default:
+
+  formatters:
+    pretty: true
+    progress: true
+
+  suites:
+    default:
+      contexts:
+        - App\Tests\Shared\Infrastructure\Behat\DemoContext
+        - App\Tests\Shared\Infrastructure\Behat\ApiContext
+
+    health_check:
+      paths: [ features/health_check ]
+      contexts:
+        - App\Tests\Shared\Infrastructure\Behat\DemoContext
+        - App\Tests\Shared\Infrastructure\Behat\ApiContext
+
+  extensions:
+    FriendsOfBehat\SymfonyExtension:
+      bootstrap: ./tests/bootstrap.php
+      kernel:
+        class: 'App\Kernel'
+        debug: true
+        environment: test
+        path: './src/Kernel.php'
+
+    Behat\MinkExtension:
+      sessions:
+        symfony:
+          symfony: ~
+      base_url: 'http://localhost:8040'

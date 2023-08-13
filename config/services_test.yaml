@@ -1,0 +1,17 @@
+framework:
+    test: true
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Tests\:
+        resource: '../tests/*'
+        exclude: '../tests/bootstrap.php'
+
+    App\Tests\Shared\Infrastructure\Behat\:
+        resource: '../tests/Shared/Infrastructure/Behat/*'
+
+    App\Tests\Shared\Infrastructure\Mink\:
+        resource: '../tests/Shared/Infrastructure/Mink/*'
